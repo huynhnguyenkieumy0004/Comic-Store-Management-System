@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Tom Comic";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // nếu bạn dùng Layout
+}
+
+<div class="container">
+    <h1 class="rainbow-text">Tom Comic</h1>
+    <div class="content">
+        <div class="box">
+            <img src="https://m.yodycdn.com/blog/truyen-tranh-ngon-tinh-hoc-duong-yodyvn4.jpg" alt="Ảnh 1">
+            <p><strong>Chào mừng đến với thế giới truyện tranh!</strong></p>
+                <p>
+                 Nơi bạn có thể đắm chìm vào những câu chuyện kịch tính, hài hước và cảm động.
+                Từ siêu anh hùng, phiêu lưu kỳ ảo cho đến ngôn tình ngọt ngào – tất cả đều có ở đây, chỉ chờ bạn khám phá.
+            </p>
+        </div>
+        <div class="box">
+            <p>Tham gia bình luận, chia sẻ cảm xúc và kết nối với những người có cùng đam mê. Truyện hay hơn khi ta cùng nhau thưởng thức.</p>
+            <p>Hãy ghé thăm fanpage của tụi mình để cập nhật truyện mới: <strong>facebook.com/TomComic.</strong></p>
+            <img src="https://i.pinimg.com/736x/a7/16/93/a716936d5a361babfc2737c73c195d71.jpg" alt="Ảnh 2">
+        </div>
+        <div class="box">
+            <img src="https://cdn.chuuniotaku.com/upload/chuuniotaku_com/post/images/2024/03/07/1367/jinx-4.jpg" alt="Ảnh 3">
+            <p>Mỗi lượt đọc, chia sẻ, hay bình luận của bạn chính là động lực để tụi mình tiếp tục mang đến nhiều bộ truyện hấp dẫn hơn nữa.</p>
+            <p>Tụi mình tin rằng <strong>một trang truyện tốt không chỉ nằm ở nội dung, mà còn ở chính độc giả</strong> – những người cùng nhau tạo nên bầu không khí vui vẻ, gắn kết. ❤️</p>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .rainbow-text {
+        font-size: 50px;
+        font-weight: bold;
+        background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+        -webkit-background-clip: text;
+        color: transparent;
+        margin-bottom: 40px;
+    }
+
+    .content {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .box {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+        .box img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .box p {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+        }
+</style>

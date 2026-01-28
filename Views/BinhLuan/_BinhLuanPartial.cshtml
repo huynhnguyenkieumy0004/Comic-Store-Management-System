@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Comic.Data.BinhLuan>
+
+@{
+    // Lấy user hiện tại từ session
+    var currentUserId = Context.Session.GetInt32("UserId");
+}
+
+
+<div class="col-sm-12">
+    <h4>Bình luận</h4>
+
+    <!-- Form thêm bình luận -->
+    <form asp-controller="BinhLuan" asp-action="Create" method="post">
+        <input type="hidden" name="maTruyen" value="@ViewBag.MaTruyen" />
+        <textarea name="noiDung" class="form-control" placeholder="Nhập bình luận..." required></textarea>
+        <button type="submit" class="btn btn-primary mt-2">Gửi</button>
+    </form>
+
+    <hr />
+
+    <!-- Danh sách bình luận -->
+    @foreach (var bl in Model.Where(b => b.MaBinhLuanCha == null))
+    {
+        <div style="margin-left:0; margin-bottom:10px;">
+            <ul>
+                <li><i class="fa fa-user"></i> @bl.MaNguoiDungNavigation?.TenNguoiDung</li>
+                <li><i class="fa fa-clock-o"></i> @bl.NgayTao?.ToString("HH:mm")</li>
+                <li><i class="fa fa-calendar-o"></i> @bl.NgayTao?.ToString("dd MMM yyyy")</li>
+            </ul>
+            <p>@bl.NoiDung</p>
+
+            @* Nút xóa *@
+            @if (currentUserId != null && bl.MaNguoiDung == currentUserId.Value)
+            {
+                <form asp-controller="BinhLuan" asp-action="Delete" method="post" style="display:inline">
+                    <input type="hidden" name="maBinhLuan" value="@bl.MaBinhLuan" />
+                    <input type="hidden" name="maTruyen" value="@ViewBag.MaTruyen" />
+                    <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                </form>
+            }
+
+            @* Nút mở form reply *@
+            <button type="button" class="btn btn-link btn-sm toggle-reply" data-id="@bl.MaBinhLuan">Trả lời</button>
+            <div class="reply-form" id="reply-form-@bl.MaBinhLuan" style="display:none; margin-top:5px;">
+                <form asp-controller="BinhLuan" asp-action="Create" method="post">
+                    <input type="hidden" name="maTruyen" value="@ViewBag.MaTruyen" />
+                    <input type="hidden" name="maBinhLuanCha" value="@bl.MaBinhLuan" />
+                    <textarea name="noiDung" class="form-control" placeholder="Trả lời bình luận..." required></textarea>
+                    <button type="submit" class="btn btn-secondary btn-sm mt-1">Gửi</button>
+                </form>
+            </div>
+
+            @* Render replies *@
+            @if (bl.BinhLuanCon != null && bl.BinhLuanCon.Any())
+            {
+                <div style="margin-left:20px;">
+                    @foreach (var reply in bl.BinhLuanCon.OrderBy(b => b.NgayTao))
+                    {
+                        <div style="margin-top:15px; margin-bottom:5px; padding-left:10px; border-left:1px solid #eee;">
+                            <ul style="margin:0; padding:0; list-style:none;">
+                                <li><i class="fa fa-user"></i> @reply.MaNguoiDungNavigation?.TenNguoiDung</li>
+                                <li><i class="fa fa-clock-o"></i> @reply.NgayTao?.ToString("HH:mm")</li>
+                                <li><i class="fa fa-calendar-o"></i> @reply.NgayTao?.ToString("dd MMM yyyy")</li>
+                            </ul>
+                            <p>@reply.NoiDung</p>
+
+                            @* Nút xóa reply *@
+                            @if (currentUserId != null && reply.MaNguoiDung == currentUserId.Value)
+                            {
+                                <form asp-controller="BinhLuan" asp-action="Delete" method="post" style="display:inline">
+                                    <input type="hidden" name="maBinhLuan" value="@reply.MaBinhLuan" />
+                                    <input type="hidden" name="maTruyen" value="@ViewBag.MaTruyen" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                </form>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+
+            <hr />
+        </div>
+    }
+
+</div>
+
+
+<script>
+    document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("toggle-reply")) {
+            var id = e.target.getAttribute("data-id");
+            document.getElementById("reply-form-" + id).style.display =
+                document.getElementById("reply-form-" + id).style.display === "none"
+                ? "block"
+                : "none";
+        }
+    });
+</script>
+

@@ -1,0 +1,263 @@
+﻿
+<div class="col-sm-3">
+	@Html.Partial("_SidebarPartial")
+</div>
+
+<div class="col-sm-9 padding-right">
+	<div class="product-details">
+		<!--product-details-->
+		<div class="col-sm-5">
+			<div class="view-product">
+				<img src="~/images/home/@Model.Image" alt="" />
+				<h3>ZOOM</h3>
+			</div>
+			<div id="similar-product" class="carousel slide" data-ride="carousel">
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner">
+					<div class="item active">
+						<a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
+						<a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
+						<a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+					</div>
+					<div class="item">
+						<a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
+						<a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
+						<a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+					</div>
+					<div class="item">
+						<a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
+						<a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
+						<a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+					</div>
+
+				</div>
+
+				<!-- Controls -->
+				<a class="left item-control" href="#similar-product" data-slide="prev">
+					<i class="fa fa-angle-left"></i>
+				</a>
+				<a class="right item-control" href="#similar-product" data-slide="next">
+					<i class="fa fa-angle-right"></i>
+				</a>
+			</div>
+
+		</div>
+		<div class="col-sm-7">
+			<div class="product-information">
+				<!--/product-information-->
+				<img src="images/product-details/new.jpg" class="newarrival" alt="" />
+				<h2 style="font-weight: bold; font-size: 28px;">@Model.TenTruyen</h2>
+				<img src="images/product-details/rating.png" alt="" />
+				<span>
+					<button class="btn btn-primary" onclick="addToLibrary(@Model.MaTruyen)">Thêm vào thư viện</button>
+
+					@section Scripts {
+						<script>
+							function addToLibrary(maTruyen) {
+								fetch(`/ThuVien/AddToLibrary?maTruyen=${maTruyen}`, { method: 'POST' })
+									.then(res => res.json())
+									.then(data => {
+										alert(data.message);
+									})
+									.catch(err => {
+										console.error(err);
+										alert("Có lỗi xảy ra!");
+									});
+							}
+						</script>
+					}
+
+				</span>
+				<p><b>Tình trạng:</b> On-going</p>
+				<p><b>Tác giả:</b> @Model.TacGia</p>
+				<p>
+					<b>Thể loại:</b>
+					@{
+						var list = new List<string>();
+						foreach (var tl in Model.MaTheLoais)
+						{
+							list.Add(tl.TenTheLoai);
+						}
+						var text = string.Join(", ", list);
+					}
+					@text
+				</p>
+				<p><b>Ngày đăng:</b> @Model.NgayDang</p>
+				<p><b>Số lượt xem:</b> @Model.SoLuotXem</p>
+				<a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
+			</div><!--/product-information-->
+		</div>
+	</div><!--/product-details-->
+
+	<div class="category-tab shop-details-tab">
+		<!--category-tab-->
+		<div class="col-sm-12">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#details" data-toggle="tab">Nội dung</a></li>
+				<li><a href="#companyprofile" data-toggle="tab">Ratings</a></li>
+				<li><a href="#tag" data-toggle="tab">Mục lục</a></li>
+				<li><a href="#reviews" data-toggle="tab">Bình luận</a></li>
+			</ul>
+		</div>
+		<div class="tab-content">
+			<div class="tab-pane fade active in" id="details">
+				@Model.MoTa
+			</div>
+
+			<div class="tab-pane fade" id="companyprofile">
+				<!-- Tổng số đánh giá (to + đỏ) -->
+				<p style="font-size: 24px; color: red; font-weight: bold;">
+					Tổng số đánh giá: @((ViewBag.DanhGiaList as List<Comic.Data.DanhGia>)?.Count)
+				</p>
+
+				<!-- Trung bình (nhỏ hơn, màu đen) -->
+				<p style="font-size: 18px; color: black; font-weight: normal;">
+					Trung bình: @Math.Round(ViewBag.AverageRating, 1) ★
+				</p>
+
+				<!-- Số đánh giá (nhỏ hơn, màu đen) -->
+				<p style="font-size: 18px; color: black; font-weight: normal;">
+					@ViewBag.TotalRatings đánh giá
+				</p>
+
+
+
+
+				<div class="rating-summary">
+					@for (int i = 5; i >= 1; i--)
+					{
+						int count = ViewBag.RatingBreakdown.ContainsKey(i) ? ViewBag.RatingBreakdown[i] : 0;
+						double percentage = ViewBag.TotalRatings > 0 ? (count * 100.0 / ViewBag.TotalRatings) : 0;
+
+						<div class="rating-item">
+							<div class="rating-label">@i ★</div>
+							<div class="rating-progress">
+								<div class="progress-bar" style="width:@percentage%"></div>
+							</div>
+							<div class="rating-count">@count lượt</div>
+						</div>
+					}
+				</div>
+
+				<style>
+					.rating-summary {
+						padding: 15px;
+						border: 1px solid #ddd;
+						border-radius: 10px;
+						background: #fff;
+					}
+
+					.rating-item {
+						margin-bottom: 20px; /* tăng khoảng cách vì label to hơn */
+					}
+
+					.rating-label {
+						font-size: 20px; /* phóng to tất cả sao */
+						font-weight: bold;
+						margin-bottom: 8px; /* cách thanh progress */
+						color: #333;
+					}
+
+					.rating-progress {
+						width: 100%;
+						height: 18px; /* tăng độ dày thanh để cân đối */
+						background-color: #e9ecef;
+						border-radius: 10px;
+						overflow: hidden;
+					}
+
+						.rating-progress .progress-bar {
+							height: 100%;
+							background-color: #007bff;
+							border-radius: 10px;
+						}
+
+					.rating-count {
+						text-align: right;
+						margin-top: 6px;
+						font-size: 16px;
+						color: #555;
+					}
+				</style>
+
+
+				@await Html.PartialAsync("~/Views/DanhGia/_DanhGiaPartial.cshtml", (IEnumerable<Comic.Data.DanhGia>)ViewBag.DanhGiaList)
+
+			</div>
+
+			<div class="tab-pane fade" id="tag" style="padding-top: 10px;">
+				<ul class="list-group">
+					@foreach (var c in ViewBag.ChuongList)
+					{
+						var isActive = (c.MaChuong == ViewBag.CurrentChapterId);
+						<li class="list-group-item">
+							<a class="@(isActive ? "active" : "")"
+							   asp-controller="Chuong" asp-action="Details" asp-route-id="@c.MaChuong">
+								Chương @c.SoChuong - @c.TieuDe
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+
+			<style>
+				.tab-content {
+					margin-top: 30px; /* đẩy toàn bộ nội dung tab xuống dưới */
+				}
+			</style>
+
+
+
+			<div class="tab-pane fade" id="reviews">
+				@await Html.PartialAsync("~/Views/BinhLuan/_BinhLuanPartial.cshtml", (IEnumerable<Comic.Data.BinhLuan>)ViewBag.BinhLuanList)
+			</div><!-- Bình luận -->
+
+
+		</div>
+	</div><!--/category-tab-->
+
+	<div class="recommended_items">
+		<h2 class="title text-center">Truyện được đề cử</h2>
+
+		<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+			<div class="carousel-inner">
+
+				@{
+					var deCuList = (List<Comic.Data.TruyenTranh>)ViewBag.TruyenDeCu;
+					int index = 0;
+				}
+
+				@foreach (var group in deCuList.Chunk(3)) // Mỗi item chứa 3 truyện
+				{
+					<div class="item @(index == 0 ? "active" : "")">
+						@foreach (var truyen in group)
+						{
+							<div class="col-sm-4">
+								<div class="product-image-wrapper">
+									<div class="single-products">
+										<div class="productinfo text-center">
+											<img src="@truyen.Image" alt="@truyen.TenTruyen" style="height:200px; object-fit:cover;" />
+											<h2>@truyen.TenTruyen</h2>
+											<p>@truyen.TacGia</p>
+											<a asp-controller="TruyenTranh" asp-action="Details" asp-route-MaTruyen="@truyen.MaTruyen" class="btn btn-default">Xem chi tiết</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+					index++;
+				}
+
+			</div>
+			<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+				<i class="fa fa-angle-left"></i>
+			</a>
+			<a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+				<i class="fa fa-angle-right"></i>
+			</a>
+		</div>
+	</div><!--/recommended_items-->
+
+</div>

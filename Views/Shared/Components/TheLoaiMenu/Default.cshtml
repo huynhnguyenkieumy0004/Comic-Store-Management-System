@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Comic.Data.TheLoai>
+
+<li class="dropdown">
+    <a href="#">Thể loại <i class="fa fa-angle-down"></i></a>
+    <ul role="menu" class="sub-menu theloai-columns">
+        @foreach (var item in Model)
+        {
+            if (item.TenTheLoai == "Tất cả")
+            {
+                <li>
+                    <a asp-action="Index" asp-controller="TruyenTranh">
+                        @item.TenTheLoai
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <a asp-action="TheLoai" asp-controller="TruyenTranh" asp-route-id="@item.MaTheLoai">
+                        @item.TenTheLoai
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</li>

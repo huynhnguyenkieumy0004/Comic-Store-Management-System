@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Comic.Data.ThuVien>
+
+<h2>Thư viện của bạn</h2>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-3">
+            <div class="product-image-wrapper">
+                <div class="single-products">
+                    <div class="productinfo text-center">
+                        <img src="~/images/home/@item.MaTruyenNavigation.Image" alt="@item.MaTruyenNavigation.TenTruyen" width="100%" />
+                        <h4>@item.MaTruyenNavigation.TenTruyen</h4>
+                        <p>Tác giả: @item.MaTruyenNavigation.TacGia</p>
+                        <p>
+                            Thể loại:
+                            @{
+                                var theLoais = item.MaTruyenNavigation.MaTheLoais.Select(tl => tl.TenTheLoai).ToList();
+                                @string.Join(", ", theLoais)
+                            }
+                        </p>
+                        <p>Ngày lưu: @item.NgayLuu?.ToString("dd/MM/yyyy")</p>
+                        <a asp-controller="TruyenTranh" asp-action="Details" asp-route-MaTruyen="@item.MaTruyenNavigation.MaTruyen" class="btn btn-success">
+                            Xem chi tiết
+                        </a>
+                        <button class="btn btn-danger btn-remove" data-id="@item.MaTruyen">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).on("click", ".btn-remove", function () {
+        var maTruyen = $(this).data("id");
+
+        $.ajax({
+            url: '/ThuVien/RemoveFromLibrary',
+            type: 'POST',
+            data: { maTruyen: maTruyen },
+            success: function (res) {
+                alert(res.message);
+                if (res.success) {
+                    location.reload(); // hoặc xóa phần tử khỏi DOM mà không reload
+                }
+            }
+        });
+    });
+</script>
+

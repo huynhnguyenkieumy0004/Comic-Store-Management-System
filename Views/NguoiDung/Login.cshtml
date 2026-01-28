@@ -1,0 +1,39 @@
+﻿@model Comic.Data.NguoiDung
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-1">
+                <div class="login-form">
+                    <h2>Đăng nhập vào tài khoản</h2>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <form asp-action="Login" asp-controller="NguoiDung" method="post">
+                        <div class="form-group">
+                            <label>Tên đăng nhập</label>
+                            <input name="tenDangNhap" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mật khẩu</label>
+                            <input name="matKhau" type="password" class="form-control" />
+                        </div>
+
+                        <span class="text-danger">@ViewBag.Error</span>
+                        <p>
+                            Bạn chưa có tài khoản?
+                            <a asp-action="Create" asp-controller="NguoiDung" class="text-primary">Đăng ký ngay</a>
+                        </p>
+                        <!-- Nút Đăng nhập -->
+                        <button type="submit" class="btn btn-success">Đăng nhập</button><br />
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

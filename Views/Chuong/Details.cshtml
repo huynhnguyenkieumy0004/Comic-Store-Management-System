@@ -1,0 +1,56 @@
+﻿@model Comic.Data.Chuong
+
+<h2 class="text-center">Chương @Model.SoChuong - @Model.TieuDe</h2>
+<p class="text-center">Ngày đăng: @Model.NgayDang?.ToString("dd/MM/yyyy")</p>
+
+<!-- Ảnh chương căn giữa và phóng to -->
+<div class="chapter-images text-center">
+    @if (Model.TrangAnhs != null && Model.TrangAnhs.Any())
+    {
+        @foreach (var t in Model.TrangAnhs.OrderBy(x => x.SoTrang))
+        {
+            <div class="mb-3">
+                <img src="~/images/tranganh/@t.DuongDan"
+                     alt="Trang @t.SoTrang"
+                     style="width: 100%; max-width: 800px; height: auto; display: block; margin: 0 auto; border: 1px solid #ccc; border-radius: 5px;" />
+            </div>
+        }
+    }
+    else
+    {
+        <div class="mb-3 text-center">
+            <img src="https://mauwebsite.vn/wp-content/uploads/2021/10/loi-404.png"
+                 alt="Không tìm thấy ảnh"
+                 style="max-width:50%; margin:0 auto;" />
+            <p>Chưa có ảnh cho chương này.</p>
+        </div>
+    }
+</div>
+
+<!-- Nút điều hướng căn giữa -->
+<!-- Nút điều hướng căn giữa bằng style -->
+<div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+    @if (ViewBag.PreviousChapterId != null)
+    {
+        <a class="btn btn-primary"
+           asp-controller="Chuong" asp-action="Details" asp-route-id="@ViewBag.PreviousChapterId">
+            &laquo; Chương trước
+        </a>
+    }
+
+    <a class="btn btn-secondary"
+       asp-controller="TruyenTranh" asp-action="Details" asp-route-MaTruyen="@Model.MaTruyen">
+        Quay lại truyện
+    </a>
+
+    @if (ViewBag.NextChapterId != null)
+    {
+        <a class="btn btn-primary"
+           asp-controller="Chuong" asp-action="Details" asp-route-id="@ViewBag.NextChapterId">
+            Chương sau &raquo;
+        </a>
+    }
+</div>
+
+
+

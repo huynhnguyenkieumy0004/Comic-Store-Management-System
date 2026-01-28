@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Comic.Data.TruyenTranh>
+
+@{
+    ViewData["Title"] = ViewBag.Keyword;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-sm-3">
+        <partial name="_SidebarPartial" />
+
+        <!-- Search box -->
+        <form asp-controller="TruyenTranh" asp-action="Search" method="post" class="mt-3">
+            <div class="search_box pull-right">
+                <input type="text" placeholder="Search" name="searchTerm" class="form-control mb-2" />
+                <button class="btn btn-warning w-100" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Main content -->
+    <div class="col-sm-9 padding-right">
+        <div class="features_items">
+            <h2 class="title text-center">@ViewBag.Keyword</h2>
+
+            <div class="row">
+
+				@foreach (var item in Model)
+				{
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+
+							<div class="single-products">
+
+								<div class="productinfo text-center">
+									<img src="~/images/home/@item.Image" alt="@item.TenTruyen" width="100%" />
+									<h2>@item.SoLuotXem</h2>
+									<p>Tác giả: @item.TacGia</p>
+									<p>
+										Thể loại:
+										@if (item.MaTheLoais != null && item.MaTheLoais.Any())
+										{
+											@string.Join(", ", item.MaTheLoais.Select(tl => tl.TenTheLoai))
+										}
+										else
+										{
+											<span>Chưa có thể loại</span>
+										}
+									</p>
+									<p>Nhà dịch: </p>
+									<button type="button" class="btn btn-default cart" onclick="addToCart(@item.MaTruyen)">
+										<i class="fa fa-shopping-cart"></i> Thêm vào thư viện
+									</button>
+								</div>
+								<div class="product-overlay">
+									<a asp-action="Details" asp-controller="SanPham" asp-route-MaSanPham="@item.MaTruyen">
+										<div class="overlay-content">
+											<h2>@item.SoLuotXem</h2>
+											<p>Tác giả: @item.TacGia</p>
+											<p>
+												Thể loại:
+												@if (item.MaTheLoais != null && item.MaTheLoais.Any())
+												{
+													@string.Join(", ", item.MaTheLoais.Select(tl => tl.TenTheLoai))
+												}
+												else
+												{
+													<span>Chưa có thể loại</span>
+												}
+											</p>
+											<button type="button" class="btn btn-default cart" onclick="event.preventDefault(); addToCart(@item.MaTruyen)">
+												<i class="fa fa-shopping-cart"></i> Thêm vào thư viện
+											</button>
+
+											<script>
+												function addToCart(id) {
+													fetch(`/GioHang/AddToCart/${id}`, { method: 'POST' })
+														.then(res => {
+															if (res.ok) {
+																alert('Đã thêm vào thư viện');
+															}
+														});
+												}
+											</script>
+										</div>
+									</a>
+								</div>
+
+							</div>
+							<div class="choose">
+								<ul class="nav nav-pills nav-justified">
+									<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+									<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<!--sanpham-->
+				}
+			</div>
+		</div>
+	</div>
+</div>

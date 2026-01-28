@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Comic.Data.DanhGia>
+
+@{
+    var currentUserId = Context.Session.GetInt32("UserId");
+    var maTruyen = ViewBag.MaTruyen; // truyền từ Details vào để biết đánh giá cho truyện nào
+
+    bool hasRated = Model != null && currentUserId != null && Model.Any(dg => dg.MaNguoiDung == currentUserId.Value);
+}
+
+<div class="col-sm-12">
+    <h4>Đánh giá</h4>
+
+    <!-- Nếu có đánh giá thì hiển thị -->
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var dg in Model)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <!-- Thông tin người đánh giá và thời gian -->
+                    <p>
+                        <i class="fa fa-user"></i>
+                        <strong>@dg.MaNguoiDungNavigation?.TenNguoiDung</strong>
+                        <i class="fa fa-clock-o ms-2"></i> @dg.NgayDanhGia?.ToString("HH:mm")
+                        <i class="fa fa-calendar-o ms-2"></i> @dg.NgayDanhGia?.ToString("dd MMM yyyy")
+                    </p>
+
+                    <!-- Số sao -->
+                    <p class="mb-1">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= dg.Ratings)
+                            {
+                                <i class="fa fa-star text-warning"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o text-warning"></i>
+                            }
+                        }
+                        <span class="ms-2">@dg.Ratings sao</span>
+                    </p>
+
+                    <!-- Nút sửa -->
+                    @if (currentUserId != null && dg.MaNguoiDung == currentUserId.Value)
+                    {
+                        <a asp-controller="DanhGia"
+                           asp-action="Edit"
+                           asp-route-maDanhGia="@dg.MaDanhGia"
+                           class="btn btn-warning btn-sm mt-2" style="margin-bottom: 15px">
+                            Sửa
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    }
+    @if (ViewBag.TotalRatings == null || ViewBag.TotalRatings == 0)
+    {
+        <p>Chưa có đánh giá nào.</p>
+    }
+    else
+    {
+        <p>@ViewBag.TotalRatings đánh giá</p>
+    }
+
+
+    <hr />
+
+    <!-- Form thêm đánh giá -->
+    @if (currentUserId != null)
+    {
+        if (!hasRated)
+        {
+            <form asp-controller="DanhGia" asp-action="Rate" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="maTruyen" value="@maTruyen" />
+                <label>Chọn số sao:</label>
+                <select name="ratings" class="form-select w-auto d-inline-block">
+                    <option value="1">1 Sao</option>
+                    <option value="2">2 Sao</option>
+                    <option value="3">3 Sao</option>
+                    <option value="4">4 Sao</option>
+                    <option value="5">5 Sao</option>
+                </select>
+                <button type="submit" class="btn btn-success ms-2">Gửi</button>
+            </form>
+        }
+        else
+        {
+            <p>Bạn đã đánh giá truyện này rồi.</p>
+        }
+    }
+    else
+    {
+        <p><a asp-controller="NguoiDung" asp-action="Login">Đăng nhập</a> để đánh giá.</p>
+    }
+
+</div>
+
+

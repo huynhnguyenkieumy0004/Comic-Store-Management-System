@@ -1,0 +1,21 @@
+﻿@model Comic.Data.DanhGia
+
+@{
+    ViewData["Title"] = "Chỉnh sửa đánh giá";
+}
+
+<h3>Chỉnh sửa đánh giá cho truyện</h3>
+
+<div class="col-sm-6">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" name="maDanhGia" value="@Model.MaDanhGia" />
+
+        <div class="mb-3">
+            <label for="ratings" class="form-label">Chọn số sao (1-5):</label>
+            <select asp-for="Ratings" asp-items="ViewBag.RatingList" class="form-control"></select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+        <a asp-controller="TruyenTranh" asp-action="Details" asp-route-MaTruyen="@Model.MaTruyen" class="btn btn-danger ms-2">Hủy</a>
+    </form>
+</div>
